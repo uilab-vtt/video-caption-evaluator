@@ -1,0 +1,125 @@
+@import url('https://fonts.googleapis.com/css?family=Lato|Nanum+Gothic');
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    font-family: "Lato", "Nanum Gothic", sans-serif;
+}
+
+.container {
+    display: flex;
+    flex-flow: column nowrap;
+    margin: 0 auto;
+    padding: 1rem 1rem;
+    width: 100%;
+    max-width: 640px;
+    align-items: center;
+}
+
+.video-box {
+    flex: 0 0 auto;
+    padding: 0.4rem 0;
+}
+
+.video {
+    width: 100%;
+    max-width: 640px;
+}
+
+.control-box {
+    display: flex;
+    width: 100%;
+    flex-flow: row nowrap;
+    justify-content: space-between;
+    flex: 0 0 auto;
+    padding: 0 0;
+    align-items: center;
+}
+
+.control-buttons {
+    flex: 0 0 auto;
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: center;
+}
+
+.time-box {
+    flex: 0 0 auto;
+    padding: 0.4rem 0;
+    width: 250px;
+    text-align: right;
+}
+
+.control-box button {
+    flex: 0 0 auto;
+    margin-right: 0.5rem;
+}
+
+.caption-box {
+    border: 1px solid #ddd;
+    width: 100%;
+    margin: 0.5rem 0;
+    min-height: 100px;
+    padding: 0.5rem 0.5rem;
+
+    flex: 0 0 auto;
+    font-size: 1rem;
+    line-height: 1rem;
+    color: #444;
+}
+
+.annotation-box {
+    border: 1px solid #444;
+    width: 100%;
+    margin: 0.5rem 0;
+    padding: 0.5rem 0.5rem;
+
+    flex: 0 0 auto;
+    display: flex;
+    flex-flow: column nowrap;
+    align-items: center;
+}
+
+.active-caption {
+    padding: 0.4rem 0;
+    font-size: 1rem;
+    font-weight: bold;
+    color: #000;
+}
+
+.question {
+    padding: 0.4rem 0;
+    font-size: 0.8rem;
+    color: #222;
+}
+
+.options {
+    padding: 0.4rem 0;
+    display: flex;
+    flex-flow: row nowrap;
+    font-size: 1rem;
+    color: #222;
+    align-items: center;
+}
+
+.label {
+    flex: 1 1 auto;
+    padding: 0 0.2rem;
+    font-size: 0.6rem;
+    color: #444;
+    text-align: center;
+}
+
+.option {
+    flex: 0 0 auto;
+    padding: 0 0.5rem;
+    margin: 0 0.2rem;
+    font-size: 0.8rem;
+}
+
+.option.active {
+    background-color: #222;
+    color: #fff;
+}

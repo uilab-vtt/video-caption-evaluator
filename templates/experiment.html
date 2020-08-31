@@ -1,0 +1,139 @@
+{% extends "base.html" %}
+{% block body %}
+<div id="app" class="container">
+    <div class="video-box">
+        <video class="video" ref="video" @ended="() => handleEnd()" muted>
+            <source :src="videoUrl" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+    </div>
+    <div class="control-box">
+        <div class="control-buttons">
+            <button @click="play">
+                Play
+            </button>
+            <button @click="pause">
+                Pause
+            </button>
+        </div>
+        <div class="time-box">
+            [[ videoCurrTime ]]
+        </div>
+    </div>
+    <div class="caption-box">
+        <div class="caption" v-for="captionId in visibleCaptionIds">
+            [[ captionData.captions[captionId] ]]
+        </div>
+    </div>
+    <div v-if="currActiveCaptionId" class="annotation-box">
+        <div class="active-caption">
+            [[ captionData.captions[currActiveCaptionId] ]]
+        </div>
+        <div class="question">
+            How appropriate is the caption?
+        </div>
+        <div class="options">
+            <div class="label">Not at all</div>
+            <button v-for="i in 5" class="option" :class="{'active': answerEval === i}"
+                @click="() => (answerEval = i)">[[ i ]]</button>
+            <div class="label">Very much</div>
+        </div>
+        <div class="question">
+            How on-topic is the caption?
+        </div>
+        <div class="options">
+            <div class="label">Not at all</div>
+            <button v-for="i in 5" class="option" :class="{'active': answerTopic === i}"
+                @click="() => (answerTopic = i)">[[ i ]]</button>
+            <div class="label">Very much</div>
+        </div>
+        <div class="button-box">
+            <button @click="submit">Submit</button>
+        </div>
+    </div>
+</div>
+<script>
+    new Vue({
+        el: '#app',
+        delimiters: ['[[', ']]'],
+        data: {
+            uid: '{{ uid }}',
+            videoUrl: '{{ video_url }}',
+            videoCurrTime: 0,
+            visibleCaptionIds: [],
+            captionData: {{ caption_data | safe }},
+            userData: [],
+            currActiveCaptionId: null,
+            answerEval: null,
+            answerTopic: null,
+        },
+        mounted() {
+            this.trackVideoTime()
+        },
+        methods: {
+            trackVideoTime() {
+                this.trackTimeInterval = setInterval(() => {
+                    const currTime = parseInt(this.$refs.video.currentTime * 10) / 10
+                    if (currTime !== this.videoCurrTime) {
+                        this.videoCurrTime = currTime
+                    }
+                }, 30)
+            },
+            play() {
+                this.$refs.video.play()
+            },
+            pause() {
+                this.$refs.video.pause()
+            },
+            submit() {
+                this.userData.push({ 
+                    id: this.currActiveCaptionId,
+                    eval: this.answerEval,
+                    topic: this.answerTopic,
+                })
+                this.currActiveCaptionId = null
+                this.answerEval = null
+                this.answerTopic = null
+                this.$refs.video.play()
+            },
+            handleEnd() {
+                alert('Done! Now we are going to upload your answers.')
+                this.upload()
+            },
+            upload() {
+                axios.post('/submit', {
+                    response: this.userData,
+                    uid: this.uid,
+                }).then(response => {
+                    const data = response.data;
+                    const succeed = data.startsWith('done:');
+                    if (succeed) {
+                        const code = data.split(':')[1];
+                        window.location.href = '/done?code=' + encodeURI(code);
+                    } else {
+                        alert('Error from server on submit: ' + response);
+                    }
+                }).catch(function (error) {
+                    alert('Error occurred on submit: ' + error);
+                });
+            },
+        },
+        watch: {
+            videoCurrTime() {
+                if (this.captionData.timestamps[this.videoCurrTime]) {
+                    const action = this.captionData.timestamps[this.videoCurrTime]
+                    if (action.type === 'show') {
+                        if (!this.visibleCaptionIds.includes(action.id)) {
+                            this.visibleCaptionIds.push(action.id)
+                        }
+                    } else {
+                        this.visibleCaptionIds = this.visibleCaptionIds.filter(cid => (cid !== action.id))
+                        this.pause()
+                        this.currActiveCaptionId = action.id
+                    }
+                }
+            }
+        },
+    })
+</script>
+{% endblock %}
