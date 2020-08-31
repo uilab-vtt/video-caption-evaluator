@@ -71,3 +71,8 @@ Participants who submitted the answer will get a code that looks like:
 `tube_corn_fossil_{user_id_with_16_digits_and_letters}`
 
 The results are saved in `./output/response/res__{user_id}.json`. 
+
+# Acknowledgements
+
+This work was supported by Institute for Information & communications Technology Promotion(IITP) grant funded by the Korea government(MSIT) (2017-0-01780, The technology development for event recognition/relational reasoning and learning knowledge based system for video understanding)
+ 
