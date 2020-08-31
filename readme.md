@@ -63,3 +63,11 @@ This is an example of caption data in JSON format.
     }
 }
 ```
+
+## Results
+
+Participants who submitted the answer will get a code that looks like: 
+
+`tube_corn_fossil_{user_id_with_16_digits_and_letters}`
+
+The results are saved in `./output/response/res__{user_id}.json`. 
